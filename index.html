@@ -4,32 +4,134 @@
         <meta charset="UTF-8" />
         <title>Dots and Boxes</title>
         <style>
-            .header-title {
-                text-align: center;
-                margin: 20px 0;
-            }
-            .header-title img {
-                height: 60px;
-            }
-            /* canvas{
+           .header-title {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .header-title img {
+            height: 60px;
+        }
+
+        .header-option a {
+            text-decoration: none;
+            position: relative;
+        }
+
+        #settingsForm {
+            width: 500px;
+            margin: 20px auto;
+            position: absolute;
+            top: 135px;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: wheat;
+            border: 1px solid #000;
+        }
+
+        .header-option {
+            display: block;
+        }
+
+        button#config_game {
+            border: none;
+            outline: none;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        button#help {
+            cursor: pointer;
+            border: none;
+            background-color: white;
+            outline: none;
+        }
+
+        canvas {
             display: flex;
             margin: 0 auto;
-        } */
+        }
+
+        #game_help {
+            position: absolute;
+            width: 700px;
+            left: 370px;
+            background-color: white;
+            border-radius: 3px;
+            text-align: justify;
+            padding: 0 20px 20px 20px;
+            font-size: 20px;
+            font-family: cursive;
+            box-shadow: 0 1px 1px 1px rgba(0,0,0,0.2);
+        }
+
+        #game_help h2 {
+            text-align: center;
+        }
+        
         </style>
     </head>
 
     <body>
         <div class="header-title">
-            <img src="./asset/img/dandblogo4.svg" alt="" />
+            <img src="./asset/img/dandblogo4.svg" class="title" alt="" />
             <div class="header-option">
-                <img src="./asset/img/iconmonstr-gear-10-icon.svg" alt="" />
-                <img src="./asset/img/iconmonstr-refresh-icon.svg" alt="" />
+                <button onclick="myFunction()" class="config_game" id="config_game">
+                    <img src="./asset/img/iconmonstr-gear-10-icon.svg" alt="" />
+                </button>
+                <a href="/" class="refresh_game">
+                    <img src="./asset/img/iconmonstr-refresh-icon.svg" alt="" />
+                </a>
+                <button onclick="myFunction1()" class="help" id="help">
+                    <img src="./asset/img/iconmonstr-help-icon.svg" alt="" />
+                </button>
             </div>
-            <div>
-                <label>Num of rows and columns</label>
-                <input type="number" min="0" name="grid" id="grid" />
-                <button id="submit">Submit</button>
+            <div id="settingsForm" style="display: none;">
+                <div style="margin: 6px 0 ;">
+                    <label>Num of rows and columns</label>
+                    <input type="number" min="2" name="grid" id="grid" />
+                    <button id="submit">Submit</button>
+                </div>
+                <fieldset>
+                    <div id="player1Controls">
+                        <label for="player1Name">Player 1 Name:</label>
+                        <input type="text" id="player1Name" value="You" onchange="manager.newGame()" maxlength="45">
+                        <label for="player1IsComputer">Computer?</label>
+                        <input id="player1IsComputer" type="checkbox" value="player1IsComputer">
+                        <label for="player1PlaysFirst">Plays first?</label>
+                        <input id="player1PlaysFirst" name="whoPlaysFirst" type="radio" checked=""
+                            onchange="manager.newGame()">
+                    </div>
+                    <div id="player2Controls">
+                        <label for="player2Name">Player 2 Name:</label>
+                        <input type="text" id="player2Name" value="Me" onchange="manager.newGame()" maxlength="45">
+                        <label for="player2IsComputer">Computer?</label>
+                        <input id="player2IsComputer" type="checkbox" value="player2IsComputer" checked=""
+                            onchange="manager.newGame()">
+                        <label for="player2PlaysFirst">Plays first?</label>
+                        <input id="player2PlaysFirst" name="whoPlaysFirst" type="radio" onchange="manager.newGame()">
+                    </div>
+                </fieldset>
             </div>
+            <aside id="game_help" style="display: none;">
+                <h2>Hướng dẫn chơi</h2>
+                <p><strong> Dots and Boxes</strong>
+                    <br>
+                    Người chơi :2
+                    Người chơi lần lượt vẽ các đường thẳng giữa các chấm trên lưới. Người chơi hoàn thành nhiều ô nhất sẽ
+                    thắng.
+                    <br>
+                  <strong> Mô tả :</strong>
+                    <br>
+                    Trò chơi được chơi bắt đầu bằng một mảng chấm hình chữ nhật.
+                    Hai người chơi lần lượt nối hai chấm liền nhau bằng đường kẻ ngang hoặc dọc. Nếu một người chơi hoàn
+                    thành mặt thứ tư của một hộp, họ đặt đầu vào hộp đó và phải vẽ một đường thẳng khác.
+                    Khi tất cả các hộp đã được hoàn thành, người chiến thắng là người chơi có nhiều hộp nhất.
+                    Trò chơi phức tạp hơn ban đầu và ngay cả trên lưới 4x4 cũng có rất nhiều cơ hội để chơi khéo léo.
+    
+                </p>
+            </aside>
         </div>
         <script>
             "use strict";
@@ -674,6 +776,26 @@
                     return false;
                 };
             }
+             // Show option
+        function myFunction() {
+            var x = document.getElementById("config_game");
+            var y = document.getElementById("settingsForm")
+            if (y.style.display === "none") {
+                y.style.display = "block";
+            } else {
+                y.style.display = "none";
+            }
+        }
+
+        function myFunction1() {
+            var x = document.getElementById("help");
+            var y = document.getElementById("game_help")
+            if (y.style.display === "none") {
+                y.style.display = "block";
+            } else {
+                y.style.display = "none";
+            }
+        }
         </script>
     </body>
 </html>
